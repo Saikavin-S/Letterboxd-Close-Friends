@@ -30,13 +30,16 @@ def Function():
         denied=soup.find('title').text
         count=0
         while denied=="Access denied | letterboxd.com used Cloudflare to restrict access":
-            time.sleep(0.1)
             count+=1
             if count==10:
                 print("Too Many Requests In A Short Amount Of Time")
                 return
         if denied=='Letterboxd - Not Found':
             print(f'Username \"{username}\" does not exist\n')
+            continue
+        no_entry=soup.find('h2')
+        if no_entry.text.strip()=='No diary entries yet. Add one?'.strip():
+            print(f'{username} does not have any diary entries\n')
             continue
         first_entry=soup.find('tr',class_='diary-entry-row viewing-poster-container')
         entry=first_entry.find('td',class_='col-production js-td-production')
