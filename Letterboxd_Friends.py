@@ -3,12 +3,7 @@ import requests
 import csv
 import time
 print("As of now, this program only supports 5 friends.")
-try:
-    f=open('usernames.csv','r')
-    data = list(csv.reader(f, delimiter=","))
-    usernames=data[0]
-    f.close()
-except OSError as e:
+def add_usernames():
     f=open('usernames.csv','w')
     usernames=[]
     no=int(input("Enter number of close friends (<=5):"))
@@ -19,7 +14,20 @@ except OSError as e:
     writer = csv.writer(f,delimiter=",")
     writer.writerow(usernames)
     f.close()
-def Function():
+try:
+    f=open('usernames.csv','r')
+    data = list(csv.reader(f, delimiter=","))
+    usernames=data[0]
+    f.close()
+    for i in usernames:
+        print(f'\'{i}\'',end=' ')
+    print('are the existing usernames.')
+    add_username=input("Do you want to change usernames? (Y/N) ").lower()
+    if add_username=='y':
+        add_usernames()      
+except OSError as e:
+    add_usernames()
+def Fetch():
     for username in usernames:
         try:
             page=requests.get(f'https://letterboxd.com/{username}/films/diary/').text
@@ -50,12 +58,12 @@ def Function():
         movie_name=entry.find('h2',class_='name -primary prettify')
         name=movie_name.a.text
         release=entry.find('span',class_='releasedate').a.text
-        print(username)
+        print(f'\n{username}')
         print(name,end=" ")
         print(f'({release})')
         print(entrydate_date,entrydate_month,entrydate_year,sep="/")
         print("")
 a=time.time()
-Function()
+Fetch()
 b=time.time()
 print("time taken to fetch results:",round(b-a,2))
